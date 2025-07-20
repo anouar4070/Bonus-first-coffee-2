@@ -4,6 +4,7 @@ import { Coffee } from './entities/coffee.entity';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateCoffeeDto } from './dto/create-coffee.dto/create-coffee.dto';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto/pagination-query.dto';
 
 @Injectable()
 export class CoffeesService {
@@ -20,9 +21,10 @@ export class CoffeesService {
     @InjectModel(Coffee.name) private readonly coffeeModel: Model<Coffee>,
   ) {}
 
-  findAll() {
+  findAll(paginationQuery: PaginationQueryDto) {
     //return this.coffees;
-    return this.coffeeModel.find().exec();
+    const { limit, offset } = paginationQuery;
+    return this.coffeeModel.find().skip(offset).limit(limit).exec();
   }
 
   // findOne(id: string) {
